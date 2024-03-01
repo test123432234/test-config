@@ -32,7 +32,10 @@ flowchart TB
       prQATeam{"Org. Team: StagingQA"} -. "pass PR" .-> devDone
       prQATeam -. "reject PR" .-> devItr
       devDone -.-> prQATask[["StagingQA team member creates a tagged merge commit"]] --> branchGating
-      branchGating --> prQADone["StagingQA team member PR consisting of tagged commits For MAIN branch"] ==> coFile ==> prPRODTeam
+      branchGating --> prQADone ==> coFile ==> prPRODTeam
+      prQADone["StagingQA team member creates PR
+            consisting of tagged commits
+            For MAIN branch"] 
   end
 
 ```
