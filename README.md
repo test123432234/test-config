@@ -17,25 +17,25 @@ GitHub doesn't let you restrict who can perform a merge.
 flowchart TB
   subgraph PROD["the Brandon step"]
       direction TB
-      coFile --> prPRODTeam["Org. Team: PROD"] -->  prodDone["merge to STAGING into Main"] 
+      prPRODTeam["Org. Team: PROD"] -->  prodDone["merge to STAGING into Main"] 
   end
   
   subgraph STAGING["the Than step"]
       direction TB
-      coFile --> prQATeam["Org. Team: StagingQA"]
-      prQATeam -- "approves PR" --> devDone[" Dev merges to STAGING branch"] --> branchGating --> prQADone["QA team member creates PR For MAIN branch"]
-      prQATeam -- "disapproves PR" --> devItr
+prQATeam{"Org. Team: StagingQA"}
+      prQATeam -. "disapproves PR" .-> devItr
+      prQATeam -- "approves PR" --> devDone["Dev merges to STAGING branch"]
+      devDone --> branchGating --> prQADone["StagingQA team member creates PR For MAIN branch"]
+      prQADone --> coFile --> prPRODTeam
   end
   
-  subgraph TOOLS["the tools"]
-      direction TB
-      branchGating["github MAIN branch commits restricted to team PROD & StagingQA"]
-      
-  end
+      branchGating["github MAIN branch commits restricted to teams: PROD & StagingQA"]
+      coFile["PR assignemnts in CODEOWNERS files"]
 
   subgraph DEV["the dev flow"]
       direction TB
-      devItr["dev iteration"] -.-> pr["pull request to Staging"] -.-> coFile["PR assignemnts in CODEOWNERS files"]
+      devItr["dev iteration"] -.-> pr["pull request to Staging"] -.-> prQATeam
   end
+
 
 ```
