@@ -15,28 +15,26 @@ GitHub doesn't let you restrict who can perform a merge.
 ## current attempt
 ```mermaid 
 flowchart TB
+      branchGating("github MAIN branch commits restricted to teams: PROD & StagingQA")
+      coFile("PR assignemnts in CODEOWNERS files")
+
   subgraph PROD["the Brandon step"]
       direction TB
-      prPRODTeam["Org. Team: PROD"] -->  prodDone["merge to STAGING into Main"] 
+      prPRODTeam["Org. Team: PROD"] ==>  prodDone["merge to STAGING PR into MAIN branch"] 
   end
   
   subgraph STAGING["the Than step"]
       direction TB
-prQATeam{"Org. Team: StagingQA"}
-      prQATeam -- "approves PR" --> devDone["Dev merges to STAGING branch"]
-      devDone --> branchGating --> prQADone["StagingQA team member creates PR For MAIN branch"]
-      prQADone --> coFile --> prPRODTeam
+      prQATeam{"Org. Team: StagingQA"} -- "approves PR" --> devDone["Dev merges to STAGING branch"]
+      prQATeam -. "disapproves PR" .-> DEV
 
-      prQATeam -. "disapproves PR" .-> devItr
+      devDone --> branchGating ==> prQADone["StagingQA team member creates PR For MAIN branch"] ==> coFile ==> prPRODTeam
+
   end
-  
-      branchGating["github MAIN branch commits restricted to teams: PROD & StagingQA"]
-      coFile["PR assignemnts in CODEOWNERS files"]
+
 
   subgraph DEV["the dev flow"]
-      direction TB
-      devItr["dev iteration"] -.-> pr["pull request to Staging"] -.-> prQATeam
+      devItr["dev iteration & PR into STAGING branch"] -.-> coFile -.-> prQATeam
   end
-
 
 ```
