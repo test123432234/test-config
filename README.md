@@ -23,10 +23,11 @@ flowchart TB
   subgraph STAGING["the Than step"]
       direction TB
 prQATeam{"Org. Team: StagingQA"}
-      prQATeam -. "disapproves PR" .-> devItr
       prQATeam -- "approves PR" --> devDone["Dev merges to STAGING branch"]
       devDone --> branchGating --> prQADone["StagingQA team member creates PR For MAIN branch"]
       prQADone --> coFile --> prPRODTeam
+
+      prQATeam -. "disapproves PR" .-> devItr
   end
   
       branchGating["github MAIN branch commits restricted to teams: PROD & StagingQA"]
