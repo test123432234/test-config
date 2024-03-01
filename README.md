@@ -13,11 +13,15 @@ GitHub doesn't let you restrict who can perform a merge.
 - github has a merge que feature (useful for branches)
 
 ## current attempt
-```mermaid 
+```mermaid
 flowchart TB
-      branchGating("github MAIN branch commits restricted to teams: PROD & StagingQA")
-      coFile("PR assignemnts in CODEOWNERS files")
-
+      branchGating{{"github MAIN branch
+            commits restricted to
+            teams: PROD & StagingQA"}}
+      coFile{{"PR assignemnts in CODEOWNERS files"}}
+      devItr["dev iteration & PR into STAGING branch"] -.->  coFile -.-> prQATeam
+      devDone["Dev merges to STAGING branch"]
+  
   subgraph PROD["the Brandon step"]
       direction TB
       prPRODTeam["Org. Team: PROD"] ==>  prodDone["merge to STAGING PR into MAIN branch"] 
@@ -25,16 +29,10 @@ flowchart TB
   
   subgraph STAGING["the Than step"]
       direction TB
-      prQATeam{"Org. Team: StagingQA"} -- "approves PR" --> devDone["Dev merges to STAGING branch"]
-      prQATeam -. "disapproves PR" .-> DEV
-
-      devDone --> branchGating ==> prQADone["StagingQA team member creates PR For MAIN branch"] ==> coFile ==> prPRODTeam
-
-  end
-
-
-  subgraph DEV["the dev flow"]
-      devItr["dev iteration & PR into STAGING branch"] -.-> coFile -.-> prQATeam
+      prQATeam{"Org. Team: StagingQA"} -. "pass PR" .-> devDone
+      prQATeam -. "reject PR" .-> devItr
+      devDone -.-> prQATask[["StagingQA team member creates a tagged merge commit"]] --> branchGating
+      branchGating --> prQADone["StagingQA team member PR consisting of tagged commits For MAIN branch"] ==> coFile ==> prPRODTeam
   end
 
 ```
