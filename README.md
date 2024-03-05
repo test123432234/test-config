@@ -27,9 +27,9 @@ flowchart TB
       prPRODTeam["Org. Team: PROD"] ==>  prodDone["merge to STAGING PR into MAIN branch"] 
   end
   
-  subgraph STAGING["the Than step"]
+  subgraph STAGING["the Tran step"]
       direction TB
-      prQATeam{"Org. Team: StagingQA"} -. "pass PR" .-> devDone
+      prQATeam{"Org. Team: frontend-qa"} -. "pass PR" .-> devDone
       prQATeam -. "reject PR" .-> devItr
       devDone -.-> prQATask[["StagingQA team member creates a tagged merge commit"]] --> branchGating
       branchGating --> prQADone ==> coFile ==> prPRODTeam
